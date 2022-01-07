@@ -1,5 +1,8 @@
 # gTrendsjs
 
+[![gtrendsjs](https://github.com/dijux/gtrendsjs/actions/workflows/npm-publish.yml/badge.svg?event=registry_package)](https://github.com/dijux/gtrendsjs/actions/workflows/npm-publish.yml)
+
+
 is a non-official api wrapper to get latest trending news filterd by categories and countries, it is a sample and basic class which comsume multilple endpoints, the project started as basic a copied curl calls from the google trends webapp, then turned into this class, the library uses xml2json and got as dependecies to accomplish the goal.
 
 it doesn't uses any cache system you will have to think about implementing cache for actual use.
