@@ -1,6 +1,8 @@
 # gTrendsjs
 
-is a non-official api wrapper to get latest trending news filterd by categories and countries, it is a sample and basic class which comsume multilple endpoints, the project started as basic a copied curl calls from the google trends webapp, then turned into this class, the library uses xml2json and got as dependecies to accomplish the goal. 
+is a non-official api wrapper to get latest trending news filterd by categories and countries, it is a sample and basic class which comsume multilple endpoints, the project started as basic a copied curl calls from the google trends webapp, then turned into this class, the library uses xml2json and got as dependecies to accomplish the goal.
+
+it doesn't uses any cache system you will have to think about implementing cache for actual use.
 
 ## Features
 
@@ -26,13 +28,18 @@ then require or import it in your javascript file
 
 ## Usage
 
+take look at example.js and supported params 
+
 - getting trending news  
 
 ```
 
 const Gtrends = require('gtrends');
 
-const news = new Gtrends('US', 'Business');
+// accepts three params geo, category and lang
+// geo supports one of these strings 'FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'
+// for the category 'all, business, entertainment, health, sicTech, sports, top'
+const news = new Gtrends('US', 'all');
 const latest = await news.getHourlyGrends()
 
 ```
@@ -79,3 +86,21 @@ const storyData = await singleStory.getSingleStory("US_lnk_fG_QSwEwAACtlM_en");
 
 ```
 
+
+### supports params 
+```
+const CATEGORIES = {
+  all: "all",
+  business: "b",
+  entertainment: "e",
+  health: "h",
+  sicTech: "t",
+  sports: "s",
+  top: "t",
+}
+
+const COUNTRIES = ['FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'];
+```
+
+### testing
+the code is not well tested, but a basic test is written to verify if is library is getting the right data, to develop upon it in the future maybe ! 

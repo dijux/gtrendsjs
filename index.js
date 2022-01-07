@@ -1,74 +1,69 @@
-// // gTrends Class
-// // Non official api to google trends
+// gTrends Class
+// Non-official api to google trends
 const got = require("got");
-const { resolve } = require("path/posix");
 const parser = require('xml2json');
+const userAgents = require("user-agents");
+const CATEGORIES = {
+  all: "all",
+  business: "b",
+  entertainment: "e",
+  health: "h",
+  sicTech: "t",
+  sports: "s",
+  top: "t",
+}
+const COUNTRIES = ['FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'];
 
 class Gtrends {
-  // geo;
-  // category;
-  // lang;
-  // keyword;
-  // timeZone;
-  // hourlyApiUrl;
-  // dailyXmlUrl;
-  // trendsApiUrl;
-  // referUrl;
-  // xmlHeaders;
-  // jsonHeaders;
-  // cleanStr;
-  // currentType;
-  // currentEndpoint;
-  // currentName;
-  // uploads_dir;
 
-  constructor(geo = "US", category = "all", lang = "en-US", keyword = null) {
-    this.geo = geo;
-    this.category = category;
-    this.lang = lang;
-    this.keyword = keyword;
-    this.timeZone = "-60";
+  constructor(geo = "US", category = "all", lang = "en-US") {
+    try {
 
-    this.hourlyApiUrl = `https://trends.google.com/trends/api/realtimetrends?hl=${this.lang}&tz=${this.timeZone}&cat=${this.category}&fi=0&fs=0&geo=${this.geo}&ri=300&rs=20&sort=0`;
+      if (COUNTRIES.includes(geo)) {
+        this.geo = geo;
+      }
+      if (CATEGORIES[category]) {
+        this.category = category;
+      }
+      this.lang = lang;
+      // this.keyword = keyword;
+      this.timeZone = "-60";
+      this.hourlyApiUrl = `https://trends.google.com/trends/api/realtimetrends?hl=${this.lang}&tz=${this.timeZone}&cat=${this.category}&fi=0&fs=0&geo=${this.geo}&ri=300&rs=20&sort=0`;
+      this.dailyXmlUrl = `https://trends.google.com/trends/trendingsearches/daily/rss?geo=${this.geo}`;
+      this.trendsApiUrl = `https://trends.google.com/trends/api/explore/examples?hl=${this.lang}&tz=${this.timeZone}&geo=${this.geo}`;
+      this.topdailyApiUrl = `https://trends.google.com/trends/api/topdailytrends?hl=${this.lang}&tz=${this.timeZone}&geo=${this.geo}`;
+      this.referUrl = `https://trends.google.com/trends/?geo=${this.geo}`;
+      this.xmlHeaders = {
+        "Content-type": "application/xml"
+      };
 
-    this.dailyXmlUrl = `https://trends.google.com/trends/trendingsearches/daily/rss?geo=${this.geo}`;
-    this.trendsApiUrl = `https://trends.google.com/trends/api/explore/examples?hl=${this.lang}&tz=${this.timeZone}&geo=${this.geo}`;
-    this.topdailyApiUrl = `https://trends.google.com/trends/api/topdailytrends?hl=${this.lang}&tz=${this.timeZone}&geo=${this.geo}`;
-    this.referUrl = `https://trends.google.com/trends/?geo=${this.geo}`;
-    this.xmlHeaders = {
-      "Content-type": "application/xml"
-    };
+      this.jsonHeaders = {
+        "content-type": "application/json",
+        "accept": "application/json, text/plain, */*",
+        "authority": "trends.google.com",
+        "user-agent": new userAgents({ deviceCategory: 'desktop' }).toString(),
+        "sec-fetch-site": "cross-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "referer": this.referUrl,
+        "accept-language": "en-US,en;q=0.9"
+      };
 
-    this.jsonHeaders = {
-      "content-type": "application/json",
-      accept: "application/json, text/plain, */*",
-      authority: "trends.google.com",
-      "user-agent":
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36",
-      "sec-fetch-site": "cross-origin",
-      "sec-fetch-mode": "cors",
-      "sec-fetch-dest": "empty",
-      referer: this.referUrl,
-      "accept-language": "en-US,en;q=0.9"
-    };
+      this.cleanStr = {
+        default: ``,
+        trend_example: `)]}'`,
+        topdaily_trends: `)]}',`,
+        single_story: ``
+      };
 
-    this.cleanStr = {
-      default: ``,
-      trend_example: `)]}'`,
-      topdaily_trends: `)]}',`,
-      single_story: ``
-    };
+      this.currentType = "";
+      this.currentEndpoint = "";
+      this.currentName = "";
 
-    this.currentType = "";
-    this.currentEndpoint = "";
-    this.currentName = "";
+    } catch (err) {
+      throw err.message
+    }
 
-    // await this.fsHandler.init(this.uploads_dir);
-    // const { articlesPath, cachFile , cachPath, appendToFile } = this.fsHandler;
-    // this.articlesPath = articlesPath
-    // this.cachFile = cachFile
-    // this.cachPath = cachPath
-    // this.appendToFile = appendToFile
   }
 
 
@@ -86,27 +81,20 @@ class Gtrends {
     return result.replace(`)]}',`, "").replace(`)]}'`, "");
   }
 
+  /**
+   * pverall wrapper to calls
+   * response depending on the request data get converted &
+   * @returns  return json object
+   */
   async gFetchApi() {
     if (this.currentEndpoint && this.currentName && this.currentType) {
-
       let jsonData
-
-
+      // xml_daily_trends
       if (this.currentType === 'daily_xml_trends') {
 
         const body = await got(this.dailyXmlUrl, {
           headers: this.xmlHeaders
         }).text();
-
-        // removing xml2js
-
-        // const jsonData = await xml2js.parseXmlString(
-        //   body,
-        //   (err, jsonData) => {
-        //     if (err) return false;
-        //     return jsonData;
-        //   }
-        // );
 
         jsonData = parser.toJson(body, {
           object: true,
@@ -141,14 +129,8 @@ class Gtrends {
       // depending on the type of query 
 
       return jsonData;
-    } else {
-      return this.cacheManager(
-        "get",
-        this.getCacheFileName(this.currentName)
-      );
     }
-
-    return { error: "gTrends gFetchApi fails " };
+    return false;
   }
 
   /*
@@ -241,19 +223,23 @@ class Gtrends {
   * gets the daily google trends from xml endpoint
   * 
   */
-  async dailyXmlGrends() {
-    try {
-      this.currentName = "example_trends";
-      this.currentType = "daily_xml_trends";
-      this.currentEndpoint = this.trendsApiUrl;
+  getDailyGtrends() {
+    this.currentName = "example_trends";
+    this.currentType = "daily_xml_trends";
+    this.currentEndpoint = this.trendsApiUrl;
 
-      let latest = await this.gFetchApi().then(res => res);
-      latest = this.cleanXmlRepsonse(latest)
-      return latest
+    return new Promise(async (resolve, reject) => {
+      try {
 
-    } catch (err) {
+        let latest = await this.gFetchApi();
+        latest = this.cleanXmlRepsonse(latest);
 
-    }
+        resolve(latest)
+
+      } catch (err) {
+        reject(err)
+      }
+    });
   }
 
   /*
@@ -286,7 +272,7 @@ class Gtrends {
     this.currentName = 'single_story_';
     this.currentType = 'single_story_data';
     this.currentEndpoint = `https://trends.google.com/trends/api/stories/${storyId}?hl=${this.lang}&tz=${this.timeZone}`;
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
         let storyData = await this.gFetchApi();
         resolve(storyData);
