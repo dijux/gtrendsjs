@@ -1,5 +1,5 @@
 {
-  "name": "gtrendsjs",
+  "name": "@dijux/gtrendsjs",
   "version": "1.0.0",
   "description": "non-official api to google trending stories",
   "main": "index.js",
