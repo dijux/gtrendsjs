@@ -1,0 +1,32 @@
+{
+  "name": "gtrendsjs",
+  "version": "0.0.1",
+  "description": "non-official api to google trends stories",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dijux/gtrends.git"
+  },
+  "keywords": [
+    "javascript",
+    "gtrendsjs",
+    "google",
+    "trends",
+    "api",
+    "news",
+    "trending"
+  ],
+  "author": "@dijux OC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dijux/gtrends/issues"
+  },
+  "homepage": "https://github.com/dijux/gtrends#readme",
+  "dependencies": {
+    "got": "^11.8.3",
+    "xml2json": "^0.12.0"
+  }
+}
