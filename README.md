@@ -39,8 +39,9 @@ const Gtrends = require('gtrends');
 // accepts three params geo, category and lang
 // geo supports one of these strings 'FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'
 // for the category 'all, business, entertainment, health, sicTech, sports, top'
+
 const news = new Gtrends('US', 'all');
-const latest = await news.getHourlyGrends()
+const latest = await news.getHourlyStories()
 
 ```
 
@@ -89,18 +90,9 @@ const storyData = await singleStory.getSingleStory("US_lnk_fG_QSwEwAACtlM_en");
 
 ### supports params 
 ```
-const CATEGORIES = {
-  all: "all",
-  business: "b",
-  entertainment: "e",
-  health: "h",
-  sicTech: "t",
-  sports: "s",
-  top: "t",
-}
-
-const COUNTRIES = ['FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'];
+supported categories : 'all, business, entertainment, health, sicTech, sports, top'
+list of countries to use not all of them are supported ['FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'];
 ```
 
 ### testing
-the code is not well tested, but a basic test is written to verify if is library is getting the right data, to develop upon it in the future maybe ! 
+the code is not well tested, but a basic test is written to verify if is library is getting the right data, to develop upon it in the future maybe !
