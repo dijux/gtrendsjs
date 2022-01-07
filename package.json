@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dijux/gtrendsjs.git"
+    "url": "git://github.com/dijux/gtrendsjs.git"
   },
   "keywords": [
     "javascript",
