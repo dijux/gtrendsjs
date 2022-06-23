@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/dijux/gtrendsjs#readme",
   "dependencies": {
-    "got": "^11.8.3",
+    "got": "^11.8.5",
     "user-agents": "^1.0.888",
     "xml2json": "^0.12.0"
   },
