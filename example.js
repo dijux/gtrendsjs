@@ -3,7 +3,7 @@ const Gtrends = require('./index');
 
 
 // init
-const gtrends = new Gtrends('FR', 'all', 'EN-US');
+const gtrends = new Gtrends('FR', 'business', 'EN-US');
 
 
 // // getting hourly trending stories

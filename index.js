@@ -7,12 +7,12 @@ const CATEGORIES = {
   all: "all",
   business: "b",
   entertainment: "e",
-  health: "h",
+  health: "m",
   sicTech: "t",
   sports: "s",
-  top: "t",
+  top: "h",
 }
-const COUNTRIES = ['FR', 'EG', 'HK', 'IL', 'SA', 'TW', 'TH', 'TR', 'UK', 'US', 'VT'];
+const COUNTRIES = ['FR', 'TR', 'US'];
 
 class Gtrends {
 
@@ -23,11 +23,12 @@ class Gtrends {
         this.geo = geo;
       }
       if (CATEGORIES[category]) {
-        this.category = category;
+        this.category = CATEGORIES[category];
       }
       this.lang = lang;
       // this.keyword = keyword;
       this.timeZone = "-60";
+      // `https://trends.google.com/trends/api/realtimetrends?hl=en-US&tz=-60&cat=b&fi=0&fs=0&geo=US&ri=300&rs=20&sort=0`
       this.hourlyApiUrl = `https://trends.google.com/trends/api/realtimetrends?hl=${this.lang}&tz=${this.timeZone}&cat=${this.category}&fi=0&fs=0&geo=${this.geo}&ri=300&rs=20&sort=0`;
       this.dailyXmlUrl = `https://trends.google.com/trends/trendingsearches/daily/rss?geo=${this.geo}`;
       this.trendsApiUrl = `https://trends.google.com/trends/api/explore/examples?hl=${this.lang}&tz=${this.timeZone}&geo=${this.geo}`;
@@ -251,6 +252,8 @@ class Gtrends {
     this.currentName = "hourly_news_trends_";
     this.currentType = "hourly_trends";
     this.currentEndpoint = this.hourlyApiUrl;
+
+    console.log("Requested linkkk", this.currentEndpoint);
 
     return new Promise(async (resolve, reject) => {
       try {
